@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MusicArchiveApi.Exceptions;
 using MusicArchiveApi.Interfaces;
+using MusicArchiveApi.Models;
 
 namespace MusicArchiveApi.Controllers
 {
@@ -17,11 +23,19 @@ namespace MusicArchiveApi.Controllers
         }
 
         /// <summary>
-        /// Passing the mbId as routing element
-        /// GET api/musicwiki/[mbId]
+        /// Fetches the artist info by passing the mbId as routing element.
+        /// Usage : GET api/musicwiki/[mbId]
         /// </summary>
-        /// <param name="mbId"><see cref="mbId"/></param>
+        /// <remarks>
+        /// Sample MbId of (Nirvana): 5b11f4ce-a62d-471e-81fc-a69a8278c7da
+        /// </remarks>
+        /// <param name="mbId">5b11f4ce-a62d-471e-81fc-a69a8278c7da</param>
         /// <returns>json format of Music Brainz info with album details</returns>
+        [ProducesResponseType(typeof(List<MusicBrainz>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestException), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NoContentException), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(NotFoundException), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Exception), StatusCodes.Status500InternalServerError)]
         [HttpGet("{mbId}")]
         public async Task<IActionResult> Get(string mbId)
         {

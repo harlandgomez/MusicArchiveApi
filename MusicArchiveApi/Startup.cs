@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +11,7 @@ using MusicArchiveApi.Configuration;
 using MusicArchiveApi.Interfaces;
 using MusicArchiveApi.Middleware;
 using MusicArchiveApi.Services;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace MusicArchiveApi
 {
@@ -32,6 +36,13 @@ namespace MusicArchiveApi
             services.AddScoped<IWikipediaAdapter, WikipediaAdapter>();
             services.AddScoped<ICoverArtAdapter, CoverArtAdapter>();
             services.AddScoped<IMusicBrainzService, MusicBrainzService>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         /// <summary>
@@ -45,6 +56,11 @@ namespace MusicArchiveApi
             }
             app.UseMiddleware(typeof(ErrorHandler));
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API V1");
+            });
         }
     }
 }
