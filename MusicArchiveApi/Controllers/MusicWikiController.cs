@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,10 @@ using MusicArchiveApi.Models;
 
 namespace MusicArchiveApi.Controllers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Controller for searching artist via Music Brainz Id (MbId)
+    /// </summary>
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -17,6 +20,9 @@ namespace MusicArchiveApi.Controllers
     {
         private readonly IMusicBrainzService _musicBrainzService;
 
+        /// <summary>
+        /// Constructor having MusicBrainService that holds logic
+        /// </summary>
         public MusicWikiController(IMusicBrainzService musicBrainzService)
         {
             _musicBrainzService = musicBrainzService;
