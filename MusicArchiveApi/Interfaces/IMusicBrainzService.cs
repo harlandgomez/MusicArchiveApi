@@ -1,10 +1,10 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MusicArchiveApi.Models;
 
 namespace MusicArchiveApi.Interfaces
 {
     public interface IMusicBrainzService
     {
-        Task<HttpResponseMessage> GetMusicBrainzArtistByMbId(string mbId, HttpClient httpClient);
+        Task<MusicBrainz> GetMusicBrainz(string mbId);
     }
 }

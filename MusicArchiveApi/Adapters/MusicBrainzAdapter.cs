@@ -16,14 +16,14 @@ namespace MusicArchiveApi.Adapters
 
         public async Task<HttpResponseMessage> GetMusicBrainzArtistByMbId(string mbId)
         {
-            var mbArtistQuery = new UriBuilder(UrlSettings.MusicBrainzUrl + $"artist/{mbId}")
+            var artistQuery = new UriBuilder(UrlSettings.MusicBrainzUrl + $"artist/{mbId}")
             {
                 Query = "fmt=json&inc=url-rels+release-groups",
                 Scheme = "http",
                 Port = NoPort
             };
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, mbArtistQuery.Uri);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, artistQuery.Uri);
             var httpResponseMessage = await HttpClient.SendAsync(requestMessage);
             return httpResponseMessage;
         }
@@ -34,7 +34,7 @@ namespace MusicArchiveApi.Adapters
             {
                 Query = $"query=entity:{mbId}&fmt=json",
                 Scheme = "http",
-                Port = -1
+                Port = NoPort
             };
 
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, annotateQuery.Uri);

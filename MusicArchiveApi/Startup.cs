@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MusicArchiveApi.Adapters;
 using MusicArchiveApi.Configuration;
 using MusicArchiveApi.Interfaces;
+using MusicArchiveApi.Middleware;
+using MusicArchiveApi.Services;
 
 namespace MusicArchiveApi
 {
@@ -18,7 +20,9 @@ namespace MusicArchiveApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -27,16 +31,19 @@ namespace MusicArchiveApi
             services.AddScoped<IWikidataAdapter, WikidataAdapter>();
             services.AddScoped<IWikipediaAdapter, WikipediaAdapter>();
             services.AddScoped<ICoverArtAdapter, CoverArtAdapter>();
+            services.AddScoped<IMusicBrainzService, MusicBrainzService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware(typeof(ErrorHandler));
             app.UseMvc();
         }
     }
